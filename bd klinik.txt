@@ -1,0 +1,165 @@
+Microsoft Windows [Version 10.0.26200.6899]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\user>cd C:\xampp
+
+C:\xampp>cd C:\xampp\mysql\bin
+
+C:\xampp\mysql\bin>mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 58
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> show databases;
++--------------------------+
+| Database                 |
++--------------------------+
+| aplikasi                 |
+| aplikasi penjualan_mobil |
+| ashila                   |
+| categories               |
+| db_kaysa                 |
+| db_login                 |
+| db_login_user            |
+| db_sekolah               |
+| db_smk3                  |
+| ecommerce_atk            |
+| information_schema       |
+| klinik_baby              |
+| klinik_sederhana         |
+| malasngoding             |
+| manajemen akademik siswa |
+| mysql                    |
+| pendaftaran_siswa        |
+| pendaftaran_siswa_       |
+| pendaftaran_siswaa       |
+| pendaftaransiswa         |
+| penjualan_mobil          |
+| performance_schema       |
+| phpmyadmin               |
+| rpl1                     |
+| sekolah                  |
+| siswa                    |
+| siswarpl                 |
+| tbl_login_user           |
+| test                     |
++--------------------------+
+29 rows in set (0.003 sec)
+
+MariaDB [(none)]> create database klinik_ABE;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> use klinik_sederhana;
+Database changed
+MariaDB [klinik_sederhana]> create table dokter (
+    -> id_dokter INT PRIMARY KEY AUTO_INCREMENT,
+    -> nama VARCHAR(100) NOT NULL,
+    -> spesialisasi VARCHAR (100),
+    -> no_telepon VARCHAR (15)
+    -> );
+ERROR 1050 (42S01): Table 'dokter' already exists
+MariaDB [klinik_sederhana]>  use klinik_ABE;
+Database changed
+MariaDB [klinik_ABE]>  create table dokter (
+    -> id_dokter INT PRIMARY KEY AUTO_INCREMENT,
+    -> nama VARCHAR(100) NOT NULL,
+    ->  spesialisasi VARCHAR (100),
+    ->  no_telepon VARCHAR (15)
+    -> );
+Query OK, 0 rows affected (0.021 sec)
+
+MariaDB [klinik_ABE]> create table pasien (
+    -> id_pasien INT PRIMARY KEY AUTO_INCREMENT,
+    -> nama VARCHAR(100) NOT NULL,
+    -> no_telepon VARCHAR (15)
+    -> );
+Query OK, 0 rows affected (0.018 sec)
+
+MariaDB [klinik_ABE]> create table janji_temu (
+    -> id_janji_temu INT PRIMARY KEY AUTO_INCREMENT,
+    -> id_dokter INT,
+    -> id_pasien INT,
+    -> tanggal DATE,
+    -> FOREIGN KEY (id_dokter) REFERENCES dokter(id_dokter),
+    -> FOREIGN KEY (id_pasien) REFERENCES pasien(id_pasien)
+    -> );
+Query OK, 0 rows affected (0.041 sec)
+
+MariaDB [klinik_ABE]> INSERT INTO dokter(nama,spesialisasi,no_telepon) VALUES
+    -> ('Dr. Suangli','Kardiologi','08123456789'),
+    -> ('Dr.Siti','Ortopedi','08123456780');
+Query OK, 2 rows affected (0.008 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [klinik_ABE]> INSERT INTO pasien (nama,no_telepon)VALUES
+    -> ('BEBY','08223456789'),
+    -> ('Dewi','08223456780');
+Query OK, 2 rows affected (0.014 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [klinik_ABE]> INSERT INTO janji_temu(id_dokter,id_pasien,tanggal)VALUES
+    -> (1,1,'2024-09-01'),
+    -> (2,2,'2024-09-02');
+Query OK, 2 rows affected (0.007 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [klinik_ABE]>  SELECT
+    -> janji_temu.id_janji_temu,
+    -> dokter.nama AS nama_dokter,
+    ->  pasien.nama AS nama_pasien,
+    -> janji_temu.tanggal
+    -> FROM
+    -> janji_temu
+    -> JOIN dokter ON janji_temu.id_dokter = dokter.id_dokter
+    -> JOIN pasien ON janji_temu.id_pasien = pasien.id_pasien;
++---------------+-------------+-------------+------------+
+| id_janji_temu | nama_dokter | nama_pasien | tanggal    |
++---------------+-------------+-------------+------------+
+|             1 | Dr. Suangli | BEBY        | 2024-09-01 |
+|             2 | Dr.Siti     | Dewi        | 2024-09-02 |
++---------------+-------------+-------------+------------+
+2 rows in set (0.008 sec)
+
+MariaDB [klinik_ABE]> select *from dokter;
++-----------+-------------+--------------+-------------+
+| id_dokter | nama        | spesialisasi | no_telepon  |
++-----------+-------------+--------------+-------------+
+|         1 | Dr. Suangli | Kardiologi   | 08123456789 |
+|         2 | Dr.Siti     | Ortopedi     | 08123456780 |
++-----------+-------------+--------------+-------------+
+2 rows in set (0.001 sec)
+
+MariaDB [klinik_ABE]> select*from pasien;
++-----------+------+-------------+
+| id_pasien | nama | no_telepon  |
++-----------+------+-------------+
+|         1 | BEBY | 08223456789 |
+|         2 | Dewi | 08223456780 |
++-----------+------+-------------+
+2 rows in set (0.001 sec)
+
+MariaDB [klinik_ABE]>  select *from janji_temu;
++---------------+-----------+-----------+------------+
+| id_janji_temu | id_dokter | id_pasien | tanggal    |
++---------------+-----------+-----------+------------+
+|             1 |         1 |         1 | 2024-09-01 |
+|             2 |         2 |         2 | 2024-09-02 |
++---------------+-----------+-----------+------------+
+2 rows in set (0.001 sec)
+
+MariaDB [klinik_ABE]> show tables;
++----------------------+
+| Tables_in_klinik_abe |
++----------------------+
+| dokter               |
+| janji_temu           |
+| pasien               |
++----------------------+
+3 rows in set (0.001 sec)
+
+MariaDB [klinik_ABE]>
